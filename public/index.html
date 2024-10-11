@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futsal Reservation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Futsal Reservation Settings</h2>
+        <form id="reservationForm">
+            <h3>User 1</h3>
+            <label for="id1">User 1 ID</label>
+            <input type="text" id="id1" name="id1" required>
+
+            <label for="password1">User 1 Password</label>
+            <input type="password" id="password1" name="password1" required>
+
+            <label for="stadium1">Select Stadium 1</label>
+            <select id="stadium1" name="stadium1">
+                <option value="ST_0_IN">Indoor Stadium (The base) 0</option>
+                <option value="ST_1">Stadium 1 (REAL MADRID) </option>
+                <option value="ST_2">Stadium 2 (MANCHESTER UNITED) </option>
+                <option value="ST_3">Stadium 3 (JUVENTUS) </option>
+                <option value="ST_4">Stadium 4 (ARSENAL) </option>
+                <option value="ST_5">Stadium 5 (BAYERN MUNICH)</option>
+                <option value="ST_6">Stadium 6 (PREDATOR)</option>
+                <option value="ST_7">Stadium 7 (F50)</option>
+
+
+            </select>
+
+            <label for="day1">Select Day 1</label>
+            <input type="date" id="day1" name="day1" required>
+
+            <label for="timeSlot1">Select Time Slot 1</label>
+            <select id="timeSlot1" name="timeSlot1">
+                <option value="1">Slot 1 (00:00 - 02:00)</option>
+                <option value="2">Slot 2 (02:00 - 04:00)</option>
+                <option value="3">Slot 3 (04:00 - 06:00) </option>
+                <option value="4">Slot 4 (06:00 - 08:00)</option>
+                <option value="5">Slot 5 (08:00 - 10:00)</option>
+                <option value="6">Slot 6 (10:00 - 12:00)</option>
+                <option value="7">Slot 7 (12:00 - 14:00)</option>
+                <option value="8">Slot 8 (14:00 - 16:00)</option>
+                <option value="9">Slot 9 (16:00 - 18:00)</option>
+                <option value="10">Slot 10 (18:00 - 20:00)</option>
+                <option value="11">Slot 11 (20:00 - 22:00)</option>
+                <option value="12">Slot 12 (22:00 - 24:00)</option>
+
+            </select>
+
+            <h3>User 2</h3>
+            <label for="id2">User 2 ID</label>
+            <input type="text" id="id2" name="id2" required>
+
+            <label for="password2">User 2 Password</label>
+            <input type="password" id="password2" name="password2" required>
+
+            <label for="stadium2">Select Stadium 2</label>
+            <select id="stadium2" name="stadium2">
+                <option value="ST_0_IN">Indoor Stadium (The base) 0</option>
+                <option value="ST_1">Stadium 1 (REAL MADRID) </option>
+                <option value="ST_2">Stadium 2 (MANCHESTER UNITED) </option>
+                <option value="ST_3">Stadium 3 (JUVENTUS) </option>
+                <option value="ST_4">Stadium 4 (ARSENAL) </option>
+                <option value="ST_5">Stadium 5 (BAYERN MUNICH)</option>
+                <option value="ST_6">Stadium 6 (PREDATOR)</option>
+                <option value="ST_7">Stadium 7 (F50)</option>
+
+            </select>
+
+            <label for="day2">Select Day 2</label>
+            <input type="date" id="day2" name="day2" required>
+
+            <label for="timeSlot2">Select Slot 2</label>
+            <select id="timeSlot2" name="timeSlot2">
+                <option value="1">Slot 1 (00:00 - 02:00)</option>
+                <option value="2">Slot 2 (02:00 - 04:00)</option>
+                <option value="3">Slot 3 (04:00 - 06:00) </option>
+                <option value="4">Slot 4 (06:00 - 08:00)</option>
+                <option value="5">Slot 5 (08:00 - 10:00)</option>
+                <option value="6">Slot 6 (10:00 - 12:00)</option>
+                <option value="7">Slot 7 (12:00 - 14:00)</option>
+                <option value="8">Slot 8 (14:00 - 16:00)</option>
+                <option value="9">Slot 9 (16:00 - 18:00)</option>
+                <option value="10">Slot 10 (18:00 - 20:00)</option>
+                <option value="11">Slot 11 (20:00 - 22:00)</option>
+                <option value="12">Slot 12 (22:00 - 24:00)</option>
+
+            </select>
+
+            <button type="submit">Save Selections</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('reservationForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+
+            const data = {
+                id1: formData.get('id1'),
+                password1: formData.get('password1'),
+                stadium1: formData.get('stadium1'),
+                // Here we ensure the date is collected in YYYY-MM-DD format
+                day1: formData.get('day1'),
+                timeSlot1: formData.get('timeSlot1'),
+                id2: formData.get('id2'),
+                password2: formData.get('password2'),
+                stadium2: formData.get('stadium2'),
+                // Collecting the second day in the same format
+                day2: formData.get('day2'),
+                timeSlot2: formData.get('timeSlot2'),
+            };
+
+            fetch('/save-selections', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(result => {
+                    alert(result.message);
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        // On page load, fetch and display saved selections
+        fetch('/get-selections')
+            .then(response => response.json())
+            .then(data => {
+                if (data.id1) {
+                    document.getElementById('id1').value = data.id1;
+                    document.getElementById('stadium1').value = data.stadium1;
+                    document.getElementById('day1').value = data.day1;
+                    document.getElementById('timeSlot1').value = data.timeSlot1;
+                }
+                if (data.id2) {
+                    document.getElementById('id2').value = data.id2;
+                    document.getElementById('stadium2').value = data.stadium2;
+                    document.getElementById('day2').value = data.day2;
+                    document.getElementById('timeSlot2').value = data.timeSlot2;
+                }
+                // Set the second ID fields similarly if present
+            })
+            .catch(error => console.error('Error fetching selections:', error));
+
+
+    </script>
+
+</body>
+
+</html>
