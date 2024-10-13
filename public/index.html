@@ -1,186 +1,282 @@
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futsal Reservation</title>
     <style>
         body {
             font-family: Arial, sans-serif;
         }
 
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
+        form {
+            margin: 20px;
+        }
+
+        .user-form, .stadium-form {
             border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        h3, h4 {
+            margin-top: 0;
+        }
+
+        button {
+            display: block;
+            margin-top: 10px;
+            padding: 5px 10px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0069d9;
         }
 
         label {
             display: block;
-            margin-top: 10px;
+            margin: 8px 0 4px;
         }
 
-        input,
-        select {
+        input[type="text"], input[type="password"], input[type="date"], select {
             width: 100%;
             padding: 8px;
-            margin-top: 5px;
-        }
-
-        button {
-            margin-top: 15px;
-            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            border: 1px solid #ccc;
         }
     </style>
 </head>
 
-<body>
-
-    <div class="container">
-        <h2>Futsal Reservation Settings</h2>
-        <form id="reservationForm">
-            <h3>User 1</h3>
-            <label for="id1">User 1 ID</label>
-            <input type="text" id="id1" name="id1" required>
-
-            <label for="password1">User 1 Password</label>
-            <input type="password" id="password1" name="password1" required>
-
-            <label for="stadium1">Select Stadium 1</label>
-            <select id="stadium1" name="stadium1">
-                <option value="ST_0_IN">Indoor Stadium (The base) 0</option>
-                <option value="ST_1">Stadium 1 (REAL MADRID) </option>
-                <option value="ST_2">Stadium 2 (MANCHESTER UNITED) </option>
-                <option value="ST_3">Stadium 3 (JUVENTUS) </option>
-                <option value="ST_4">Stadium 4 (ARSENAL) </option>
-                <option value="ST_5">Stadium 5 (BAYERN MUNICH)</option>
-                <option value="ST_6">Stadium 6 (PREDATOR)</option>
-                <option value="ST_7">Stadium 7 (F50)</option>
-
-
-            </select>
-
-            <label for="day1">Select Day 1</label>
-            <input type="date" id="day1" name="day1" required>
-
-            <label for="timeSlot1">Select Time Slot 1</label>
-            <select id="timeSlot1" name="timeSlot1">
-                <option value="1">Slot 1 (00:00 - 02:00)</option>
-                <option value="2">Slot 2 (02:00 - 04:00)</option>
-                <option value="3">Slot 3 (04:00 - 06:00) </option>
-                <option value="4">Slot 4 (06:00 - 08:00)</option>
-                <option value="5">Slot 5 (08:00 - 10:00)</option>
-                <option value="6">Slot 6 (10:00 - 12:00)</option>
-                <option value="7">Slot 7 (12:00 - 14:00)</option>
-                <option value="8">Slot 8 (14:00 - 16:00)</option>
-                <option value="9">Slot 9 (16:00 - 18:00)</option>
-                <option value="10">Slot 10 (18:00 - 20:00)</option>
-                <option value="11">Slot 11 (20:00 - 22:00)</option>
-                <option value="12">Slot 12 (22:00 - 24:00)</option>
-
-            </select>
-
-            <h3>User 2</h3>
-            <label for="id2">User 2 ID</label>
-            <input type="text" id="id2" name="id2" required>
-
-            <label for="password2">User 2 Password</label>
-            <input type="password" id="password2" name="password2" required>
-
-            <label for="stadium2">Select Stadium 2</label>
-            <select id="stadium2" name="stadium2">
-                <option value="ST_0_IN">Indoor Stadium (The base) 0</option>
-                <option value="ST_1">Stadium 1 (REAL MADRID) </option>
-                <option value="ST_2">Stadium 2 (MANCHESTER UNITED) </option>
-                <option value="ST_3">Stadium 3 (JUVENTUS) </option>
-                <option value="ST_4">Stadium 4 (ARSENAL) </option>
-                <option value="ST_5">Stadium 5 (BAYERN MUNICH)</option>
-                <option value="ST_6">Stadium 6 (PREDATOR)</option>
-                <option value="ST_7">Stadium 7 (F50)</option>
-
-            </select>
-
-            <label for="day2">Select Day 2</label>
-            <input type="date" id="day2" name="day2" required>
-
-            <label for="timeSlot2">Select Slot 2</label>
-            <select id="timeSlot2" name="timeSlot2">
-                <option value="1">Slot 1 (00:00 - 02:00)</option>
-                <option value="2">Slot 2 (02:00 - 04:00)</option>
-                <option value="3">Slot 3 (04:00 - 06:00) </option>
-                <option value="4">Slot 4 (06:00 - 08:00)</option>
-                <option value="5">Slot 5 (08:00 - 10:00)</option>
-                <option value="6">Slot 6 (10:00 - 12:00)</option>
-                <option value="7">Slot 7 (12:00 - 14:00)</option>
-                <option value="8">Slot 8 (14:00 - 16:00)</option>
-                <option value="9">Slot 9 (16:00 - 18:00)</option>
-                <option value="10">Slot 10 (18:00 - 20:00)</option>
-                <option value="11">Slot 11 (20:00 - 22:00)</option>
-                <option value="12">Slot 12 (22:00 - 24:00)</option>
-
-            </select>
-
-            <button type="submit">Save Selections</button>
-        </form>
+<form id="reservationForm">
+    <a href="/logs.html">See Logs</a>
+        
+    <div>
+        <label for="userCount">Number of Users to Add:</label>
+        <input type="number" id="userCount" min="1" value="1">
+        <button type="button" onclick="addMultipleUsers()">Add Users</button>
     </div>
+    <div id="usersContainer">
+        <!-- User forms will be dynamically inserted here -->
+    </div>
+    <button type="submit">Submit</button>
+</form>
 
-    <script>
-        document.getElementById('reservationForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            const formData = new FormData(event.target);
+<script>
+    let userCount = 0; // Track the number of users
 
-            const data = {
-                id1: formData.get('id1'),
-                password1: formData.get('password1'),
-                stadium1: formData.get('stadium1'),
-                // Here we ensure the date is collected in YYYY-MM-DD format
-                day1: formData.get('day1'),
-                timeSlot1: formData.get('timeSlot1'),
-                id2: formData.get('id2'),
-                password2: formData.get('password2'),
-                stadium2: formData.get('stadium2'),
-                // Collecting the second day in the same format
-                day2: formData.get('day2'),
-                timeSlot2: formData.get('timeSlot2'),
-            };
+    // Fetch and populate existing data
+    document.addEventListener('DOMContentLoaded', async function () {
+        const response = await fetch('/get-selections');
+        const users = await response.json();
+        users.forEach(user => {
+            addUser(user);
+        });
+    });
 
-            fetch('/save-selections', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            })
-                .then(response => response.json())
-                .then(result => {
-                    alert(result.message);
-                })
-                .catch(error => console.error('Error:', error));
+    // Function to add multiple users based on the input value
+    function addMultipleUsers() {
+        const count = parseInt(document.getElementById('userCount').value);
+        for (let i = 0; i < count; i++) {
+            addUser();
+        }
+    }
+
+    // Add user form dynamically
+    function addUser(existingUser = null) {
+        userCount++;
+        const userId = existingUser ? existingUser.id : '';
+        const userPassword = existingUser ? existingUser.password : '';
+        const userForm = `
+        <div class="user-form">
+            <h3>User ${userCount}</h3>
+            <button type="button" onclick="removeUser(this)">Remove User</button>
+            <label for="id">User ID:</label>
+            <input type="text" name="id" value="${userId}" required>
+            <label for="password">Password:</label>
+            <input type="password" name="password" value="${userPassword}" required>
+            <div class="stadium-container">
+                <h4>Stadium Details</h4>
+                <label for="stadiumCount">Number of Stadiums to Add:</label>
+                <input type="number" class="stadiumCount" min="1" value="1">
+                <button type="button" onclick="addMultipleStadiums(this)">Add Stadiums</button>
+                ${generateStadiumForms(existingUser ? existingUser.stadiums : null)}
+                <button type="button" onclick="addStadiumDetails(this)">Add More Stadium</button>
+            </div>
+        </div>
+        `;
+        document.getElementById('usersContainer').insertAdjacentHTML('beforeend', userForm);
+    }
+
+    // Function to add multiple stadium details based on the input value
+    function addMultipleStadiums(button) {
+        const stadiumCount = parseInt(button.previousElementSibling.value);
+        for (let i = 0; i < stadiumCount; i++) {
+            addStadiumDetails(button);
+        }
+    }
+
+    // Add stadium details dynamically
+    function addStadiumDetails(button, stadium = null) {
+        const stadiumForm = `
+            <div class="stadium-form">
+                <label for="stadium">Stadium:</label>
+                <select name="stadium">
+                    <option value="ST_0_IN" ${stadium?.stadium === "ST_0_IN" ? "selected" : ""}>Indoor Stadium (The base) 0</option>
+                    <option value="ST_1" ${stadium?.stadium === "ST_1" ? "selected" : ""}>Stadium 1 (REAL MADRID)</option>
+                    <option value="ST_2" ${stadium?.stadium === "ST_2" ? "selected" : ""}>Stadium 2 (MANCHESTER UNITED) </option>
+                    <option value="ST_3" ${stadium?.stadium === "ST_3" ? "selected" : ""}>Stadium 3 (JUVENTUS) </option>
+                    <option value="ST_4" ${stadium?.stadium === "ST_4" ? "selected" : ""}>Stadium 4 (ARSENAL) </option>
+                    <option value="ST_5" ${stadium?.stadium === "ST_5" ? "selected" : ""}>Stadium 5 (BAYERN MUNICH)</option>
+                    <option value="ST_6" ${stadium?.stadium === "ST_6" ? "selected" : ""}>Stadium 6 (PREDATOR)</option>
+                    <option value="ST_7" ${stadium?.stadium === "ST_7" ? "selected" : ""}>Stadium 7 (F50)</option>
+                </select>
+                <label for="day">Day:</label>
+                <input type="date" name="day" value="${stadium?.day || ''}" required>
+                <label for="timeSlot">Time Slot (check the site to confirm the slot time):</label>
+                <select name="timeSlot">
+                    <option value="1" ${stadium?.timeSlot === "1" ? "selected" : ""}>Slot 1 (00:00 - 02:00)</option>
+                    <option value="2" ${stadium?.timeSlot === "2" ? "selected" : ""}>Slot 2 (02:00 - 04:00)</option>
+                    <option value="3" ${stadium?.timeSlot === "3" ? "selected" : ""}>Slot 3 (04:00 - 06:00)</option>
+                    <option value="4" ${stadium?.timeSlot === "4" ? "selected" : ""}>Slot 4 (06:00 - 08:00)</option>
+                    <option value="5" ${stadium?.timeSlot === "5" ? "selected" : ""}>Slot 5 (08:00 - 10:00)</option>
+                    <option value="6" ${stadium?.timeSlot === "6" ? "selected" : ""}>Slot 6 (10:00 - 12:00)</option>
+                    <option value="7" ${stadium?.timeSlot === "7" ? "selected" : ""}>Slot 7 (12:00 - 14:00)</option>
+                    <option value="8" ${stadium?.timeSlot === "8" ? "selected" : ""}>Slot 8 (14:00 - 16:00)</option>
+                    <option value="9" ${stadium?.timeSlot === "9" ? "selected" : ""}>Slot 9 (16:00 - 18:00)</option>
+                    <option value="10" ${stadium?.timeSlot === "10" ? "selected" : ""}>Slot 10 (18:00 - 20:00)</option>
+                    <option value="11" ${stadium?.timeSlot === "11" ? "selected" : ""}>Slot 11 (20:00 - 22:00)</option>
+                    <option value="12" ${stadium?.timeSlot === "12" ? "selected" : ""}>Slot 12 (22:00 - 24:00)</option>
+                </select>
+                <button type="button" onclick="removeStadium(this)">Remove Stadium</button>
+            </div>
+        `;
+        button.insertAdjacentHTML('beforebegin', stadiumForm);
+    }
+
+    // Generate stadium forms
+    function generateStadiumForms(stadiums = null) {
+        if (!stadiums) return `
+            <div class="stadium-form">
+                <label for="stadium">Stadium: </label>
+                <select name="stadium">
+                    <option value="ST_0_IN">Indoor Stadium (The base) 0</option>
+                    <option value="ST_1">Stadium 1 (REAL MADRID) </option>
+                    <option value="ST_2">Stadium 2 (MANCHESTER UNITED) </option>
+                    <option value="ST_3">Stadium 3 (JUVENTUS) </option>
+                    <option value="ST_4">Stadium 4 (ARSENAL) </option>
+                    <option value="ST_5">Stadium 5 (BAYERN MUNICH) </option>
+                    <option value="ST_6">Stadium 6 (PREDATOR)</option>
+                    <option value="ST_7">Stadium 7 (F50)</option>
+                </select>
+                <label for="day">Day:</label>
+                <input type="date" name="day" required>
+                <label for="timeSlot">Time Slot (check the site to confirm the slot time):</label>
+                <select name="timeSlot">
+                    <option value="1">Slot 1 (00:00 - 02:00)</option>
+                    <option value="2">Slot 2 (02:00 - 04:00)</option>
+                    <option value="3">Slot 3 (04:00 - 06:00)</option>
+                    <option value="4">Slot 4 (06:00 - 08:00)</option>
+                    <option value="5">Slot 5 (08:00 - 10:00)</option>
+                    <option value="6">Slot 6 (10:00 - 12:00)</option>
+                    <option value="7">Slot 7 (12:00 - 14:00)</option>
+                    <option value="8">Slot 8 (14:00 - 16:00)</option>
+                    <option value="9">Slot 9 (16:00 - 18:00)</option>
+                    <option value="10">Slot 10 (18:00 - 20:00)</option>
+                    <option value="11">Slot 11 (20:00 - 22:00)</option>
+                    <option value="12">Slot 12 (22:00 - 24:00)</option>
+                </select>
+                <button type="button" onclick="removeStadium(this)">Remove Stadium</button>
+            </div>
+        `;
+
+        return stadiums.map(stadium => `
+            <div class="stadium-form">
+                <label for="stadium">Stadium: </label>
+                <select name="stadium">
+                    <option value="ST_0_IN" ${stadium.stadium === "ST_0_IN" ? "selected" : ""}>Indoor Stadium (The base) 0</option>
+                    <option value="ST_1" ${stadium.stadium === "ST_1" ? "selected" : ""}>Stadium 1 (REAL MADRID)</option>
+                    <option value="ST_2" ${stadium.stadium === "ST_2" ? "selected" : ""}>Stadium 2 (MANCHESTER UNITED) </option>
+                    <option value="ST_3" ${stadium.stadium === "ST_3" ? "selected" : ""}>Stadium 3 (JUVENTUS) </option>
+                    <option value="ST_4" ${stadium.stadium === "ST_4" ? "selected" : ""}>Stadium 4 (ARSENAL) </option>
+                    <option value="ST_5" ${stadium.stadium === "ST_5" ? "selected" : ""}>Stadium 5 (BAYERN MUNICH) </option>
+                    <option value="ST_6" ${stadium.stadium === "ST_6" ? "selected" : ""}>Stadium 6 (PREDATOR)</option>
+                    <option value="ST_7" ${stadium.stadium === "ST_7" ? "selected" : ""}>Stadium 7 (F50)</option>
+                </select>
+                <label for="day">Day:</label>
+                <input type="date" name="day" value="${stadium.day}" required>
+                <label for="timeSlot">Time Slot (check the site to confirm the slot time):</label>
+                <select name="timeSlot">
+                    <option value="1" ${stadium.timeSlot === "1" ? "selected" : ""}>Slot 1 (00:00 - 02:00)</option>
+                    <option value="2" ${stadium.timeSlot === "2" ? "selected" : ""}>Slot 2 (02:00 - 04:00)</option>
+                    <option value="3" ${stadium.timeSlot === "3" ? "selected" : ""}>Slot 3 (04:00 - 06:00)</option>
+                    <option value="4" ${stadium.timeSlot === "4" ? "selected" : ""}>Slot 4 (06:00 - 08:00)</option>
+                    <option value="5" ${stadium.timeSlot === "5" ? "selected" : ""}>Slot 5 (08:00 - 10:00)</option>
+                    <option value="6" ${stadium.timeSlot === "6" ? "selected" : ""}>Slot 6 (10:00 - 12:00)</option>
+                    <option value="7" ${stadium.timeSlot === "7" ? "selected" : ""}>Slot 7 (12:00 - 14:00)</option>
+                    <option value="8" ${stadium.timeSlot === "8" ? "selected" : ""}>Slot 8 (14:00 - 16:00)</option>
+                    <option value="9" ${stadium.timeSlot === "9" ? "selected" : ""}>Slot 9 (16:00 - 18:00)</option>
+                    <option value="10" ${stadium.timeSlot === "10" ? "selected" : ""}>Slot 10 (18:00 - 20:00)</option>
+                    <option value="11" ${stadium.timeSlot === "11" ? "selected" : ""}>Slot 11 (20:00 - 22:00)</option>
+                    <option value="12" ${stadium.timeSlot === "12" ? "selected" : ""}>Slot 12 (22:00 - 24:00)</option>
+                </select>
+                <button type="button" onclick="removeStadium(this)">Remove Stadium</button>
+            </div>
+        `).join('');
+    }
+
+    // Remove a user form
+    function removeUser(button) {
+        button.closest('.user-form').remove();
+    }
+
+    // Remove a stadium form
+    function removeStadium(button) {
+        button.closest('.stadium-form').remove();
+    }
+
+    // Submit handler
+    document.getElementById('reservationForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const users = [];
+        document.querySelectorAll('.user-form').forEach(userForm => {
+            const id = userForm.querySelector('input[name="id"]').value;
+            const password = userForm.querySelector('input[name="password"]').value;
+            const stadiums = [];
+            userForm.querySelectorAll('.stadium-form').forEach(stadiumForm => {
+                const stadium = stadiumForm.querySelector('select[name="stadium"]').value;
+                const day = stadiumForm.querySelector('input[name="day"]').value;
+                const timeSlot = stadiumForm.querySelector('select[name="timeSlot"]').value;
+                stadiums.push({ stadium, day, timeSlot });
+            });
+            users.push({ id, password, stadiums });
         });
 
-        // On page load, fetch and display saved selections
-        fetch('/get-selections')
-            .then(response => response.json())
-            .then(data => {
-                if (data.id1) {
-                    document.getElementById('id1').value = data.id1;
-                    document.getElementById('stadium1').value = data.stadium1;
-                    document.getElementById('day1').value = data.day1;
-                    document.getElementById('timeSlot1').value = data.timeSlot1;
-                }
-                if (data.id2) {
-                    document.getElementById('id2').value = data.id2;
-                    document.getElementById('stadium2').value = data.stadium2;
-                    document.getElementById('day2').value = data.day2;
-                    document.getElementById('timeSlot2').value = data.timeSlot2;
-                }
-                // Set the second ID fields similarly if present
-            })
-            .catch(error => console.error('Error fetching selections:', error));
+        // Send data to backend
+        const response = await fetch('/save-selections', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ users })
+        });
+
+        const result = await response.json();
+        alert(result.message);
+    });
+</script>
 
 
-    </script>
 
-</body>
 
-</html>
+
+

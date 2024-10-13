@@ -5,39 +5,40 @@ const bodyParser = require('body-parser');
 const schedule = require('node-schedule');
 const fs = require('fs');
 const path = require('path');
+const moment = require('moment-timezone');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-let userSelections = {}; // In-memory storage for user selections
+let userSelections = []; // In-memory storage for multiple user selections
+let reservationLogs = []; // Store reservation logs in memory
+
+// Fetch reservation logs
+app.get('/get-logs', (req, res) => {
+    res.json(reservationLogs);
+});
 
 // Save user selections
 app.post('/save-selections', (req, res) => {
-    const { id1, password1, id2, password2, stadium1, stadium2, day1, day2, timeSlot1, timeSlot2 } = req.body;
+    const { users } = req.body; // Expect an array of users, each with their own stadium and time slots
+    
+    userSelections = users.map(user => ({
+        id: user.id,
+        password: user.password,
+        stadiums: user.stadiums.map(stadium => ({
+            stadium: stadium.stadium,
+            day: stadium.day,
+            timeSlot: stadium.timeSlot
+        }))
+    }));
 
-    userSelections = {
-        id1,
-        password1,
-        id2,
-        password2,
-        stadium1,
-        stadium2,
-        day1,
-        day2,
-        timeSlot1,
-        timeSlot2,
-    };
-    console.log(userSelections)
-
+    console.log(userSelections);
     res.send({ message: 'Selections saved successfully!' });
 });
 
 // Fetch saved user selections
 app.get('/get-selections', (req, res) => {
-
-    console.log(userSelections)
-
     res.json(userSelections);
 });
 
@@ -51,13 +52,15 @@ function getNextDate(currentDate, dayOffset) {
 // Delay function to wait until 10 AM
 function waitUntilTenAM() {
     return new Promise((resolve) => {
-      const now = new Date();
-      const tenAM = new Date();
-      tenAM.setHours(10, 0, 0, 0); // Set time to 10 AM
-      
-      const msUntilTenAM = tenAM - now;
+
+     const now = moment().tz('Asia/Seoul'); // Get the current time in Asia/Seoul time zone
+        const tenAm = moment().tz('Asia/Seoul').set({ hour: 10, minute: 0, second: 0, millisecond: 0 }); // Set time to 6:15 AM
+
+        const msUntilTenAM = tenAm.diff(now); // Calculate the difference in milliseconds
+
       if (msUntilTenAM > 0) {
         console.log(`Waiting ${msUntilTenAM / 1000} seconds until 10 AM...`);
+        reservationLogs.push({text: `Waiting ${msUntilTenAM / 1000} seconds until 10 AM...`, color:"normal" })
         setTimeout(resolve, msUntilTenAM);
       } else {
         resolve(); // Already 10 AM or later, no need to wait
@@ -65,8 +68,21 @@ function waitUntilTenAM() {
     });
 }
 
-// Function to perform login and reserve a slot
-async function loginAndReserve(id, password, stadium, day, timeSlot) {
+
+
+function getCurrentDateTime() {
+    // Get current time in Asia/Seoul time zone
+    const now = moment().tz('Asia/Seoul');
+
+    // Format the date and time as 'YYYY-MM-DD HH:mm:ss.SSS'
+    const formattedDateTime = now.format('YYYY-MM-DD HH:mm:ss.SSS');
+
+    return formattedDateTime;
+}
+
+
+async function loginAndReserve(user) {
+    const { id, password, stadiums } = user;
     try {
         console.log(`Logging in with ID: ${id}...`);
 
@@ -95,18 +111,21 @@ async function loginAndReserve(id, password, stadium, day, timeSlot) {
             return;
         }
 
-        console.log(`Login successful for ID: ${id}. Attempting reservation...`);
-
-        // Wait until 10 AM before proceeding to make reservation request
+        console.log(`Login successful for ID: ${id}. Attempting reservations...`);
+        reservationLogs.push({text: `Login successful for ID: ${id}. Attempting reservations...`,color:"green" } )
         await waitUntilTenAM();
-        
-        console.log("It's 10 AM. Making reservation...");
 
-        await attemptReservation(cookie, stadium, day, timeSlot);
+        console.log(`It's 10 AM. Making reservations for ${id} at time ${getCurrentDateTime()}` );
+        reservationLogs.push({text: `It's 10 AM. Making reservations for ${id} at time ${getCurrentDateTime()}`, color:"normal" });
+
+        // Attempt reservations for all stadium slots for the user
+        await Promise.all(stadiums.map(stadium => attemptReservation(cookie, stadium.stadium, stadium.day, stadium.timeSlot)));
     } catch (error) {
-        console.error(`Error during login/reservation for ID: ${id}`,  error.response ? error.response.data : error);
+        console.error(`Error during login/reservation for ID: ${id}`, error.response ? error.response.data : error, ` at time ${getCurrentDateTime()}`);
+        reservationLogs.push({text: `Error during login/reservation for ID: ${id} ${error.response ? error.response.data : error} at time ${getCurrentDateTime()} `, color:"red" })
     }
 }
+
 
 // Function to attempt reservation for a given stadium, day, and time slot
 async function attemptReservation(cookie, stadium, selectedDay, selectedSlot) {
@@ -131,90 +150,27 @@ async function attemptReservation(cookie, stadium, selectedDay, selectedSlot) {
     // Start with the user's preferred day and slot
     const selectedDate = selectedDay; // Use the day provided by the user
 
-    console.log(`Attempting reservation for exact slot ${selectedSlot} on day ${selectedDate}...`);
-
     // First try the exact slot the user selected
     const time_code = `E_${selectedSlot.toString().padStart(2, '0')}`;
     const reservationData = { use_date: selectedDate, stadium_code: stadium, time_code };
 
     try {
+        console.log(`Reservation Initated for ${selectedDate}, stadium ${stadium}, slot ${time_code} at time ${getCurrentDateTime()}`)
+        reservationLogs.push({text: `Reservation Initated for ${selectedDate}, stadium ${stadium}, slot ${time_code} at time ${getCurrentDateTime()}`,  color:"normal" })
         const reservationResponse = await axios.post(reservationUrl, reservationData, { headers: reservationHeaders });
 
         if (reservationResponse.data.success) {
-            console.log(`Reservation successful for ${selectedDate}, stadium ${stadium}, slot ${time_code}`);
+            console.log(`Reservation successful for ${selectedDate}, stadium ${stadium}, slot ${time_code} at time ${getCurrentDateTime()}`);
+            reservationLogs.push({text: `Reservation successful for ${selectedDate}, stadium ${stadium}, slot ${time_code} at time ${getCurrentDateTime()}`, color:"green" });
             success = true;
         } else {
-            console.log(`Exact slot reservation failed for ${selectedDate}, stadium ${stadium}, slot ${time_code}. Trying other slots...`);
+            console.log(`Reservation failed for ${selectedDate}, stadium ${stadium}, slot ${time_code} at time ${getCurrentDateTime()}`);
+            reservationLogs.push({text: `Reservation failed for ${selectedDate}, stadium ${stadium}, slot ${time_code} at time ${getCurrentDateTime()}`, color:"red" });
         }
     } catch (error) {
-        console.error(`Error during exact slot reservation:`, error.response ? error.response.data : error);
+        console.error(`Error during exact slot reservation:`, error.response ? error.response.data : error, ` at time ${getCurrentDateTime()}`);
+        reservationLogs.push({text: `Reservation failed  for ${selectedDate}, stadium ${stadium}, slot ${time_code}: ${error.response ? error.response.data : error} at time ${getCurrentDateTime()}`, color:"red" });
     }
-
-    // If the exact slot fails, try other slots for the same day
-    if (!success) {
-        for (let slot = 1; slot <= 12; slot++) {
-            // Skip the exact slot that has already been tried
-            if (slot === selectedSlot) continue;
-
-            const alt_time_code = `E_${slot.toString().padStart(2, '0')}`;
-            const altReservationData = { use_date: selectedDate, stadium_code: stadium, time_code: alt_time_code };
-
-            console.log(`Checking alternative reservation for ${selectedDate}, stadium ${stadium}, slot ${alt_time_code}...`);
-
-            try {
-                const altReservationResponse = await axios.post(reservationUrl, altReservationData, { headers: reservationHeaders });
-
-                if (altReservationResponse.data.success) {
-                    console.log(`Alternative reservation successful for ${selectedDate}, stadium ${stadium}, slot ${alt_time_code}`);
-                    success = true;
-                    break;
-                }
-            } catch (error) {
-                console.error(`Error during alternative slot reservation:`, error.response ? error.response.data : error);
-            }
-
-            // Wait 5 seconds before the next attempt
-            await delay(5000);
-        }
-    }
-
-    // If no slots were found for the selected day, check the following days
-    if (!success) {
-        for (let dayOffset = 1; dayOffset < 30; dayOffset++) { // Check up to 30 days ahead
-            const nextDate = getNextDate(selectedDate, dayOffset); // Get the next date
-
-            console.log(`Checking slots for ${nextDate}...`);
-
-            // Try each slot for the next day
-            for (let slot = 1; slot <= 12; slot++) {
-                const time_code = `E_${slot.toString().padStart(2, '0')}`;
-                const reservationData = { use_date: nextDate, stadium_code: stadium, time_code };
-
-                try {
-                    const reservationResponse = await axios.post(reservationUrl, reservationData, { headers: reservationHeaders });
-
-                    if (reservationResponse.data.success) {
-                        console.log(`Reservation successful for ${nextDate}, stadium ${stadium}, slot ${time_code}`);
-                        success = true;
-                        break; // Exit the loop if successful
-                    }
-                } catch (error) {
-                    console.error(`Error during reservation attempt for ${nextDate}, slot ${time_code}:`, error.response ? error.response.data : error);
-                }
-
-                // Wait 5 seconds before next attempt
-                await delay(5000);
-            }
-
-            if (success) break; // Exit if a reservation was successful
-        }
-    }
-
-    // Notify if no reservation was made
-    if (!success) {
-        console.log(`No available slots found for the selected date or the following 30 days.`);
-    }
-
 
 }
 
@@ -224,25 +180,32 @@ function delay(ms) {
 }
 
 // Schedule to run both reservations simultaneously at 10 AM on the first day of each month
-schedule.scheduleJob('58 9 1 * *', () => {
-    if (userSelections.id1 && userSelections.id2) {
-        // Run both reservation attempts simultaneously
-        console.log('Starting simultaneous reservation attempts for both users...');
 
-        // Run login and reservation attempts for both IDs
-        Promise.all([
-            loginAndReserve(userSelections.id1, userSelections.password1, userSelections.stadium1, userSelections.day1, userSelections.timeSlot1),
-            loginAndReserve(userSelections.id2, userSelections.password2, userSelections.stadium2, userSelections.day2, userSelections.timeSlot2)
-        ]).then(() => {
-            console.log('Reservation attempts complete.');
-        }).catch((error) => {
-            console.error('Error during reservation attempts:', error);
+let rule = new schedule.RecurrenceRule();
+
+// your timezone
+rule.tz = 'Asia/Seoul';
+
+
+rule.second = 0;
+rule.minute = 58;
+rule.hour = 9;
+rule.date = 1;
+
+schedule.scheduleJob(rule, () => {
+    reservationLogs = [];
+    console.log('Starting simultaneous reservation attempts for all users...at time ', getCurrentDateTime());
+    reservationLogs.push( {text: `Starting simultaneous reservation attempts for all users...at time ${getCurrentDateTime()}`, color: "normal"} )
+
+    Promise.all(userSelections.map(user => loginAndReserve(user)))
+        .then(() => {
+            console.log('All reservation attempts complete at time ', getCurrentDateTime())
+            reservationLogs.push( {text: `All reservation attempts complete at time ${getCurrentDateTime()}`, color:"normal" })
+        })
+        .catch((error) => {
+            console.error('Error in reservation attempts:', error);
         });
-    } else {
-        console.log('Reservation details are incomplete. Please provide both user details.');
-    }
 });
-
 
 // Start the server
 const PORT = process.env.PORT || 3000;

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Logs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            margin: 0;
+        }
+        .logs-container {
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .log {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .log:last-child {
+            border-bottom: none;
+        }
+        .no-logs {
+            text-align: center;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Reservation Logs</h1>
+    <div class="logs-container" id="logs-container">
+        <!-- Logs will be dynamically inserted here -->
+    </div>
+
+    <script>
+        // Fetch logs from backend and display them
+        function fetchLogs() {
+            fetch('/get-logs')
+                .then(response => response.json())
+                .then(logs => {
+                    const logsContainer = document.getElementById('logs-container');
+                    logsContainer.innerHTML = ''; // Clear previous logs
+
+                    if (logs.length === 0) {
+                        logsContainer.innerHTML = '<p class="no-logs">No reservation logs available.</p>';
+                    } else {
+                        logs.forEach(log => {
+                            const logElement = document.createElement('div');
+                            logElement.classList.add('log');
+                            logElement.textContent = log.text; // Display the log string directly
+
+                            if (log.color === "green") {
+                                logElement.style.color = 'green';
+                            } else if (log.color === "red") {
+                                logElement.style.color = 'red';
+                            } else {
+                                logElement.style.color = 'black'; // Normal text
+                            }
+
+                            logsContainer.appendChild(logElement);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching logs:', error);
+                });
+        }
+
+        // Call fetchLogs on page load
+        window.onload = fetchLogs;
+    </script>
+
+</body>
+</html>
