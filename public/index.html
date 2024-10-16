@@ -70,8 +70,12 @@
     <div id="usersContainer">
         <!-- User forms will be dynamically inserted here -->
     </div>
-    <button type="submit">Submit</button>
+    <button type="submit">Submit</button>    
 </form>
+
+<div style="text-align: center; margin-top: 20px;">
+    <button onclick="triggerManualReservation()">Trigger Reservation</button>
+</div>
 
 <script>
     let userCount = 0; // Track the number of users
@@ -273,6 +277,19 @@
         const result = await response.json();
         alert(result.message);
     });
+
+     // Function to trigger the reservation process manually
+     function triggerManualReservation() {
+        fetch('/manual-reservation', { method: 'POST' })
+            .then(response => response.json())
+            .then(result => {
+                alert(result.message); // Display the result to the user
+                fetchLogs(); // Refresh the logs after the manual reservation
+            })
+            .catch(error => {
+                console.error('Error triggering manual reservation:', error);
+            });
+    }
 </script>
 
 

@@ -42,6 +42,7 @@ app.get('/get-selections', (req, res) => {
     res.json(userSelections);
 });
 
+
 // Helper function to get the next available date
 function getNextDate(currentDate, dayOffset) {
     const nextDate = new Date(currentDate);
@@ -126,6 +127,47 @@ async function loginAndReserve(user) {
     }
 }
 
+async function loginAndReserveNow(user) {
+    const { id, password, stadiums } = user;
+    try {
+        console.log(`Logging in with ID: ${id}...`);
+
+        const loginUrl = 'https://www.futsalbase.com/api/member/login';
+        const loginHeaders = {
+            'accept': 'application/json, text/plain, */*',
+            'accept-encoding': 'gzip, deflate, br, zstd',
+            'accept-language': 'en-US,en;q=0.9',
+            'content-type': 'application/json',
+            'origin': 'https://www.futsalbase.com',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36',
+            'sec-fetch-site': 'same-origin',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-dest': 'empty',
+            'sec-ch-ua': '"Google Chrome";v="129", "Not=A?Brand";v="8", "Chromium";v="129"',
+            'sec-ch-ua-platform': '"Windows"',
+        };
+
+        const loginData = { id, password };
+
+        const loginResponse = await axios.post(loginUrl, loginData, { headers: loginHeaders });
+        const cookie = loginResponse.headers['set-cookie'].find(cookie => cookie.startsWith('thebase='));
+
+        if (!cookie) {
+            console.error('Failed to retrieve login cookie for ID:', id);
+            return;
+        }
+
+        console.log(`Login successful for ID: ${id}. Attempting reservations...`);
+        reservationLogs.push({text: `Login successful for ID: ${id}. Attempting reservations...`,color:"green" } )
+
+        // Attempt reservations for all stadium slots for the user
+        await Promise.all(stadiums.map(stadium => attemptReservation(cookie, stadium.stadium, stadium.day, stadium.timeSlot)));
+    } catch (error) {
+        console.error(`Error during login/reservation for ID: ${id}`, error.response ? error.response.data : error, ` at time ${getCurrentDateTime()}`);
+        reservationLogs.push({text: `Error during login/reservation for ID: ${id} ${error.response ? error.response.data : error} at time ${getCurrentDateTime()} `, color:"red" })
+    }
+}
+
 
 // Function to attempt reservation for a given stadium, day, and time slot
 async function attemptReservation(cookie, stadium, selectedDay, selectedSlot) {
@@ -178,6 +220,26 @@ async function attemptReservation(cookie, stadium, selectedDay, selectedSlot) {
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+// Route to manually trigger the reservation process
+app.post('/manual-reservation', (req, res) => {
+    reservationLogs = []; // Clear logs before starting a new process
+    console.log('Manual reservation triggered at time', getCurrentDateTime());
+    reservationLogs.push({ text: `Manual reservation triggered at time ${getCurrentDateTime()}`, color: "normal" });
+
+    // Run the reservation process for all users
+    Promise.all(userSelections.map(user => loginAndReserveNow(user)))
+        .then(() => {
+            console.log('Manual reservation attempts complete at time', getCurrentDateTime());
+            reservationLogs.push({ text: `Manual reservation attempts complete at time ${getCurrentDateTime()}`, color: "normal" });
+            res.json({ message: 'Manual reservation process complete!' });
+        })
+        .catch((error) => {
+            console.error('Error in manual reservation attempts:', error);
+            res.status(500).json({ message: 'Error during manual reservation process.' });
+        });
+});
+
 
 // Schedule to run both reservations simultaneously at 10 AM on the first day of each month
 
